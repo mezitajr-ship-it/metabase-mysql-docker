@@ -1,0 +1,25 @@
+"Túnel HTTP Reverso Seguro"
+
+# Stack de Analítica con Metabase y MySQL
+
+Este es un entorno containerizado diseñado para levantar de forma rápida una infraestructura de Business Intelligence local o de producción utilizando **Docker Compose**.
+
+### 🚀 Tecnologías incluidas:
+* **Metabase:** Servidor de BI para la creación de dashboards y consultas.
+* **MySQL 8.0:** Base de datos relacional para el almacenamiento del negocio (incluye script de pruebas con 100 alumnos).
+* **Ngrok:** Para la exposición segura del entorno a través de un túnel HTTP.
+
+#DATOS IMPORTANTES
+
+ngrok abre una conexión desde dentro de tu servidor hacia afuera, permitiendo el tráfico entrante sin que tengas que abrir puertos en tu router o firewall.
+
+El archivo .env tiene que ser llenado con datos propios.
+
+Metabase tiene su propio volumen y almacenara datos nativos de metabase como usuarios creados, configuraciones etc
+
+Mysql tiene su propio volumen en el cual se llenara data explicita del cliente 
+
+de esta manera se mantiene independencia entre ambos servicios.
+
+
+

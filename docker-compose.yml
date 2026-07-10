@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  metabase:
+    image: metabase/metabase:latest
+    container_name: metabase
+    ports:
+      - "3000:3000"
+    volumes:
+      #METABASE TENDRA SU PROPIO VOLUMEN PARA NO HACER CONFLICTO CON LA BASE DE DATOS
+      - metabase-data:/metabase-data
+    environment:
+      #LA INFORMACION Y CONFIGURACIONES NATIVAS DE METABASE SERAN GUARDADAS EN ESTA RUTA
+      - MB_DB_FILE=/metabase-data/metabase.db
+    networks:
+      - red-metabase
+    restart: always
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok
+    command:
+      #NGROK SE CONECTA AL CONTENEDOR METABASE PARA ESTABLECER LA CONEXION Y PUBLICAR EL SERVICIO
+      - "http"
+      - "metabase:3000"
+    environment:
+      #TOKEN BRINDADO POR NGROK --> TIENES QUE REGISTRARTE Y CREAR TU CUENTA
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    #PRIMERO TIENE QUE INICIARLIZAR EL CONTENEDOR METABASE PARA QUE NGROK PUEDA ESTABLECER COMUNICACION SIN PROBLEMAS
+    depends_on:
+      - metabase
+    networks:
+      - red-metabase
+    restart: always
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DB}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASS}
+      - MYSQL_USER=${MYSQL_USER_CONEX}
+      - MYSQL_PASSWORD=${MYSQL_PASS_CONEX}
+    ports:
+      - "3306:3306"
+    command:
+      # Obligatorio en MySQL 8 para que Metabase se conecte de inmediato sin dar error de credenciales
+      - "--default-authentication-plugin=mysql_native_password"
+    volumes:
+      #MYSQL TIENE SU PROPIO VOLUMEN ASI EVITAREMOS CONFLICTOS E INTERRUPCION DEL SISTEMA
+      - mysql-data:/var/lib/mysql
+    networks:
+      - red-metabase
+
+networks:
+  red-metabase:
+    name: red-metabase
+
+volumes:
+  metabase-data:
+    name: metabase-data
+
+  mysql-data:
+    name: mysql-data
