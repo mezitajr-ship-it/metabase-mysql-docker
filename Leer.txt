@@ -15,9 +15,9 @@ ngrok abre una conexión desde dentro de tu servidor hacia afuera, permitiendo e
 
 El archivo .env tiene que ser llenado con datos propios.
 
-Metabase tiene su propio volumen y almacenara datos nativos de metabase como usuarios creados, configuraciones etc
+Metabase tiene su propio volumen y almacenara datos nativos, como usuarios creados, configuraciones etc
 
-Mysql tiene su propio volumen en el cual se llenara data explicita del cliente 
+Mysql tiene su propio volumen el cual se llenara con data explicita del cliente 
 
 de esta manera se mantiene independencia entre ambos servicios.
 
